@@ -1,22 +1,46 @@
 import * as React from 'react';
 import './App.css';
+import { Auth } from './Auth';
 
-import logo from './logo.svg';
+class App extends React.Component<{}, {log: string[]}> {
 
-class App extends React.Component {
-  public render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+  constructor(props: {}){
+    super(props);
+      this.state = {
+        log: []
+      };
+  }
+
+  public render(){
+    return(
+      <div style={{padding: '100px', display: 'flex', flexDirection: 'row'}}>
+        <div style={{flex: 1}}>
+          <button onClick={this.onLoginButtonClick}>Login</button>
+        </div>
+        <div style={{flex: 1}}>
+          {this.renderLog()}
+        </div>
       </div>
     );
   }
+
+  private renderLog = () => {
+    return this.state.log.map(x => {
+      return <p key={Math.random()}>{x}</p>
+    })
+  }
+
+  private onLoginButtonClick = () => {
+    const auth = new Auth(this.logCallback);
+    auth.login();
+  }
+
+  private logCallback = (...text: string[]) => {
+    const { log } = this.state;
+    const newLog = [...log, text.join(' ')];
+    this.setState({log: newLog});
+  }
+
 }
 
 export default App;
